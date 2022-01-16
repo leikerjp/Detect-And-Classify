@@ -2,8 +2,8 @@ import requests
 import numpy
 import cv2
 
-from client.MotionTracker import *
-from client.settings import *
+from MotionTracker import *
+from settings import *
 
 # Setup capture device
 cam = cv2.VideoCapture(0)
@@ -72,7 +72,7 @@ while(1):
         file = dict(file=('image.jpg', data_encode, 'image/jpeg', {'Expires': '0'}))
 
         # Send to server
-        response = requests.post('http://localhost:5000/log_image', files=file, data=camera_metadata)
+        response = requests.post('http://192.168.0.122:5000/log_image', files=file, data=camera_metadata)
 
         # If we get a response it's to update our camera's id because
         # this is the first time we sent a message
