@@ -1,6 +1,7 @@
 import requests
 import numpy
 import cv2
+import time
 
 from MotionTracker import *
 from settings import *
@@ -41,7 +42,10 @@ mTracker = MotionTracker(height=image_resolution[1],
                          open_element=open_element,
                          close_element=close_element)
 
-
+# Setup times so that we've already exceeded the elapsed time and are guaranteed to send when we get a detection
+time_to_wait_in_seconds = 5
+previous_time_in_seconds = 0
+current_time_in_seconds = time.time()
 while(1):
 
     # Read a frame and resize (size was arbitrarily picked)
@@ -63,8 +67,12 @@ while(1):
     keypoints = [track.centroid for track in tracks]
     motion_detected = len(keypoints) > 0
 
+    # Calculate elapsed time since last sent message, we only want to send if time has been
+    # great than 5 seconds.
+    time_elapsed = current_time_in_seconds - previous_time_in_seconds > time_to_wait_in_seconds
+
     # Send any detected motion to server
-    if motion_detected:
+    if motion_detected and time_elapsed:
 
         # Serialize the image in preparation to send over REST API
         imencoded = cv2.imencode(".jpg", frame)[1]
@@ -84,6 +92,12 @@ while(1):
                 # Using writelines to overwrite the file, but with just the one line
                 # (need to be sure we don't write to the file, but OVERWRITE the file)
                 file.writelines([str(camera_metadata['id'])])
+
+        # Update previous time (because we just did a send)
+        previous_time_in_seconds = current_time_in_seconds
+
+    # The last thing in the loop is to update the current time for the elapsed time calculation
+    current_time_in_seconds = time.time()
 
 
 # When everything done, release the capture (though we really won't get here)
