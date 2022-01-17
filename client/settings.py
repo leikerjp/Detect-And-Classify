@@ -2,13 +2,16 @@
     Camera Settings
 
     Raspberry Pi 3 with RPI Camera v2
+
+    ***INREDIBLY IMPORTANT NOTE***
+    The GPU Memory was bumped up in /boot/config.txt
 '''
 with open("camera_id.txt", 'r') as file:
     id = file.readlines()
     id = id[0]
 
 camera_metadata = dict(id=id, name="rpi3-cam-0")
-camera_resolution = (320,240) # 320,240 - 240p
+camera_resolution = (2592,1952) # 320,240 - 240p
 camera_framerate = 10
 
 '''
