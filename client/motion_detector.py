@@ -74,6 +74,9 @@ while(1):
     # Send any detected motion to server
     if motion_detected and time_elapsed:
 
+        if draw_detected_keypoints:
+            frame = cv.drawKeypoints(frame, keypoints, outImage=np.array([]), color=(0, 0, 255), flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+
         # Serialize the image in preparation to send over REST API
         imencoded = cv2.imencode(".jpg", frame)[1]
         data_encode = numpy.array(imencoded).tobytes()

@@ -19,7 +19,7 @@ camera_framerate = 10
 '''
 image_resolution = camera_resolution
 convert_to_gray = False
-
+draw_detected_keypoints = True
 
 '''
     Motion Detector Settings
